@@ -1,25 +1,49 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react';
+import Display from './components/Display';
+import ButtonPanel from './components/ButtonPanel';
+import calculate from './logic/calculate';
+import styles from './style/Components.module.css';
 
-function App() {
+const App = () => {
+  const [total, setTotal] = useState(null);
+  const [next, setNext] = useState('0');
+  const [operation, setOperation] = useState(null);
+
+  const handleState = (newDigit) => {
+    const numbers = /[0-9]/g;
+    const dataObject = { total, next, operation };
+    const calResult = calculate(dataObject, newDigit);
+    if (newDigit === 'AC' || newDigit === '%') {
+      setNext(calResult.next);
+      setOperation(null);
+    } else if (newDigit === '+/-') {
+      setNext(calResult.next);
+    } else if (newDigit === '.') {
+      setNext((prevState) => (
+        prevState.includes('.') ? prevState : prevState + newDigit
+      ));
+    } else if (newDigit === '+' || newDigit === '-' || newDigit === 'X' || newDigit === '÷') {
+      setNext(calResult.next);
+      setTotal(calResult.total);
+      setOperation(calResult.operation);
+    } else if (newDigit === '=' && dataObject.next && dataObject.total) {
+      setNext(calResult.next);
+    } else if (newDigit.match(numbers)) {
+      setNext((prevState) => (
+        prevState === '0' ? newDigit : prevState + newDigit
+      ));
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={styles.calContainer}>
+      <div className={styles.calculator}>
+        <Display status={next} />
+        <ButtonPanel grantParentHandleState={handleState} />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
