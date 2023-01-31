@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from '../style/Components.module.css';
-//import '../style/Components.module.css';
 
 export default function Button(props) {
   const { name } = props;
@@ -11,13 +10,10 @@ export default function Button(props) {
     let result;
     if (btn === '0') {
       result = styles.btnZero;
-      //result = "btnZero";
     } else if (operators.includes(btn)) {
       result = styles.btnOperators;
-      //result = "btnOperators";
     } else {
       result = styles.btn;
-      //result = "btn";
     }
     return result;
   };
